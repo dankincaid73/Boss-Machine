@@ -1,19 +1,19 @@
-const express = require('express');
-const meetingsRouter = express.Router();
-const db = require("./db");
-
-// Meetings Routes
-meetingsRouter.get('/api/meetings', function(req, res) {
-    const meetings = db.getAllFromDatabase('meetings');
-    res.send(meetings);
-});
-
-meetingsRouter.post('/api/meetings', function(req, res) {
-  // createMeeting db.addToDatabase('meetings');
-});
-
-meetingsRouter.delete('/api/meetings/', function(req, res) {
-  // db.deleteAllFromDatabase('meetings');
-});
+const meetingsRouter = require('express').Router();
 
 module.exports = meetingsRouter;
+
+const { getAllFromDatabase, addToDatabase, deleteAllFromDatabase, createMeeting } = require('./db');
+
+meetingsRouter.get('/', (req, res, next) => {
+  res.send(getAllFromDatabase('meetings'));
+});
+
+meetingsRouter.post('/', (req, res, next) => {
+  let newMeeting = addToDatabase('meetings', createMeeting());
+  res.status(201).send(newMeeting);
+});
+
+meetingsRouter.delete('/', (req, res, next) => {
+  deleteAllFromDatabase('meetings');
+  res.status(204).send();
+});
